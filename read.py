@@ -7,8 +7,13 @@ class Knn(object):
         self.k=k
 	
     def knn(new,vectors):
-        k_metric=[ self.metric(new_vec_i)
-    	           for vec_i in vectors]
+        distance=[self.metric(new_x,x_i) 
+              for x_i in train_dataset['x']]
+        distance=np.array(distance)
+        dist_inds=distance.argsort()[0:self.k]
+        y=   train_dataset['y']
+        nearest=[y[i] for i in dist_inds]
+        return nearest
 
 def read_mat(name,flat=False):
     mat_contents = sio.loadmat(name)
