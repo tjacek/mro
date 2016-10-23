@@ -6,7 +6,7 @@ class Knn(object):
         self.metric=metric
         self.k=k
 	
-    def knn(new,vectors):
+    def __call__(new,vectors):
         distance=[self.metric(new_x,x_i) 
               for x_i in train_dataset['x']]
         distance=np.array(distance)
