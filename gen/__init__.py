@@ -1,5 +1,6 @@
 import numpy as np
-
+from sets import Set
+import matplotlib.pyplot as plt
 
 class GenerateDataset(object):
     def __init__(self,dist, preds):
@@ -16,6 +17,27 @@ class Dataset(object):
     def __init__(self,X,y):
         self.X=X
         self.y=y
+    
+    def labels(self):
+        return list(Set(self.y))
+    
+    def show(self):
+    	fig, ax = plt.subplots()
+    	for label_j in self.labels():
+    	    
+    	    x_0,x_1=self.get_cat(label_j)
+            ax.scatter(x_0,x_1,label=label_j)
+        plt.legend()
+        plt.show()
+
+    def get_cat(self,cat_i):
+    	points=[ point_i 
+    	         for i,point_i in enumerate(self.X)
+    	           if self.y[i]==cat_i]
+        data=np.array(points)
+        x_0=data[:,0]
+        x_1=data[:,1]
+        return x_0,x_1
 
 class NormalDist(object):
     def __init__(self, sigma=1.0,mu=0.0, dim=2):
