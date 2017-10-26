@@ -18,6 +18,13 @@ class Dataset(object):
         self.X=X
         self.y=y
     
+    def select(self,check):
+        indexes=[i for i,y_i in enumerate(self.y)
+                   if check(i,y_i) ]
+        X_s=[ self.X[i] for i in indexes]
+        y_s=[ self.y[i] for i in indexes]
+        return Dataset(X_s,y_s)
+
     def labels(self):
         return list(Set(self.y))
     
