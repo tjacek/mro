@@ -1,9 +1,8 @@
 import numpy as np 
 
 class KNN(object):
-	def __init__(self,samples,cats,metric,k=1):
-		self.samples=samples
-        self.cats=cats
+	def __init__(self,train,cats,metric,k=1):
+		self.train=train
 		self.metric=metric
 		self.k=k
 
@@ -15,11 +14,11 @@ class KNN(object):
         return pred_cat
 
     def get_cats(self,inds):
-        return [self.cats[i]  for i in inds ]
+        return [self.train.y[i] for i in inds ]
 
     def distance(sample,k=None):
         dists=[ self.metric(sample,train_i) 
-                  for train_i in self.train]
+                  for train_i in self.train.X]
         dists=np.array(dists)
         dist_inds=distance.argsort()
         if(self.k!=None):
