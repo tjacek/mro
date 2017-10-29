@@ -46,6 +46,13 @@ class Dataset(object):
         x_1=data[:,1]
         return x_0,x_1
 
+class Modulo(object):
+    def __init__(object,k):
+        self.k=k
+
+    def __call__(i,y_i):
+        return (i % 2)==self.k
+
 class NormalDist(object):
     def __init__(self, sigma=1.0,mu=0.0, dim=2):
         self.mu=mu
