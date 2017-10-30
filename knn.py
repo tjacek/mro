@@ -2,20 +2,37 @@ import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib.colors import ListedColormap
 from sklearn import neighbors, datasets
+import metric_learn
 
 class KNN(object):
-    def __init__(self,k=1):
+    def __init__(self,k=1,metric=None):
         self.k=k
         self.clf = neighbors.KNeighborsClassifier(k)
+        self.metric=metric
+        self.preproc=None
 
     def train(self,dataset):
-        self.clf.fit(dataset.X,dataset.y)
+        X=np.array(dataset.X)
+        if(self.metric=='mahalo'):
+            x=np.array(dataset.X)
+            conv_matrix=np.cov(x.T)
+            self.clf = neighbors.KNeighborsClassifier(self.k,
+                                                      metric='mahalanobis',
+                                                      metric_params={'V': conv_matrix})
+        if(self.metric=='lmnn'):    
+            self.preproc=metric_learn.lmnn.LMNN(k=self.k)
+            self.preproc.fit(X,dataset.y)
+            X=self.preproc.transform(X)
+        self.clf.fit(X,dataset.y)
 
-    def __call__(self,sample):
+    def __call__(self,sample,single=True):
+        if(self.metric=='lmnn'):
+            sample=self.preproc.transform(sample)
         pred=self.clf.predict(sample)#np.c_[xx.ravel(), yy.ravel()])
-        print(type(pred))
-        print(pred)
-        return pred[0]
+        if(single):
+            return pred[0]
+        else:
+            return pred
 
 def decision_boundary(dataset,clf,h=0.02):
     cmap_light = ListedColormap(['#FFAAAA', '#AAFFAA', '#AAAAFF'])
@@ -41,37 +58,3 @@ def decision_boundary(dataset,clf,h=0.02):
 #              % (n_neighbors, weights))
 
     plt.show()
-
-#h = .02  # step size in the mesh
-
-# Create color maps
-#cmap_light = ListedColormap(['#FFAAAA', '#AAFFAA', '#AAAAFF'])
-#cmap_bold = ListedColormap(['#FF0000', '#00FF00', '#0000FF'])
-
-#for weights in ['uniform', 'distance']:
-    # we create an instance of Neighbours Classifier and fit the data.
-    #clf = neighbors.KNeighborsClassifier(n_neighbors, weights=weights)
-    #clf.fit(X, y)
-
-    # Plot the decision boundary. For that, we will assign a color to each
-    # point in the mesh [x_min, x_max]x[y_min, y_max].
-#    x_min, x_max = X[:, 0].min() - 1, X[:, 0].max() + 1
-#    y_min, y_max = X[:, 1].min() - 1, X[:, 1].max() + 1
-#    xx, yy = np.meshgrid(np.arange(x_min, x_max, h),
-#                         np.arange(y_min, y_max, h))
-#    Z = clf.predict(np.c_[xx.ravel(), yy.ravel()])
-
-    # Put the result into a color plot
-#    Z = Z.reshape(xx.shape)
-#    plt.figure()
-#    plt.pcolormesh(xx, yy, Z, cmap=cmap_light)
-
-    # Plot also the training points
-#    plt.scatter(X[:, 0], X[:, 1], c=y, cmap=cmap_bold,
-#                edgecolor='k', s=20)
-#    plt.xlim(xx.min(), xx.max())
-#    plt.ylim(yy.min(), yy.max())
-#    plt.title("3-Class classification (k = %i, weights = '%s')"
-#              % (n_neighbors, weights))
-
-#plt.show()
