@@ -16,6 +16,3 @@ metr=['mahalo','lmnn']
 my_gen=make_gen()
 exp1=exp.Experiment(my_gen,knn.KNN(k=1,metric='lmnn'))#'mahalo'))
 exp1(250,True)
-
-#dataset=my_gen(500)
-#dataset.show()
