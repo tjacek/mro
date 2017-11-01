@@ -17,8 +17,7 @@ class Experiment(object):
         y_true=test.y
         print(classification_report(y_true, y_pred,digits=4))
         if(show):
-#           dataset.show()
-            knn.decision_boundary(dataset,self.model.clf)
+            knn.decision_boundary(dataset,self.model)
 
     def pred(self,dataset):
     	return [ self.model(x_i) for x_i in dataset.X]
