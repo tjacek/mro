@@ -26,9 +26,9 @@ class KNN(object):
         self.clf.fit(X,dataset.y)
 
     def __call__(self,sample,single=True):
-        if(self.metric=='lmnn'):
+        if(self.metric!=None):
             sample=self.preproc.transform(sample)
-        pred=self.clf.predict(sample)#np.c_[xx.ravel(), yy.ravel()])
+        pred=self.clf.predict(sample)
         if(single):
             return pred[0]
         else:
@@ -45,7 +45,7 @@ def decision_boundary(dataset,clf,h=0.02):
     xx, yy = np.meshgrid(np.arange(x_min, x_max, h),
                          np.arange(y_min, y_max, h))
 
-    Z=clf.predict(np.c_[xx.ravel(), yy.ravel()])
+    Z=clf(np.c_[xx.ravel(), yy.ravel()],single=False)
     Z = Z.reshape(xx.shape)
     plt.figure()
     plt.pcolormesh(xx, yy, Z, cmap=cmap_light)
