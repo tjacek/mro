@@ -26,7 +26,7 @@ class KNN(object):
         self.clf.fit(X,dataset.y)
 
     def __call__(self,sample,single=True):
-        if(self.metric!=None):
+        if(self.preproc!=None):
             sample=self.preproc.transform(sample)
         pred=self.clf.predict(sample)
         if(single):
