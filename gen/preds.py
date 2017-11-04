@@ -13,3 +13,11 @@ class TwoTriangles(object):
    	def __init__(self, p1,p2,p3,p4,p5):
    	    self.triangle1=gen.triangle.InTriangle(p1,p2,p3)
         self.triangle2=gen.triangle.InTriangle(p3,p4,p5)
+
+class ElipticCurve(object):
+    def __init__(self,a,b=1.0):
+        self.a=a
+        self.b=b
+
+    def __call__(self,p):
+        return p[1]**2 > (p[0]**3+self.a*p[0]+self.b)		
