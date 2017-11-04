@@ -17,7 +17,10 @@ class Dataset(object):
     def __init__(self,X,y):
         self.X=X
         self.y=y
-    
+
+    def __len__(self):
+        return len(self.y)
+
     def select(self,check):
         indexes=[i for i,y_i in enumerate(self.y)
                    if check(i,y_i) ]
@@ -47,10 +50,10 @@ class Dataset(object):
         return x_0,x_1
 
 class Modulo(object):
-    def __init__(object,k):
+    def __init__(self,k):
         self.k=k
 
-    def __call__(i,y_i):
+    def __call__(self,i,y_i):
         return (i % 2)==self.k
 
 class NormalDist(object):
@@ -63,6 +66,19 @@ class NormalDist(object):
         points= [np.random.normal(self.mu, self.sigma,self.dim)		
          		    for i in range(n)]
         return points
+
+class UniformDist(object):
+    def __init__(self, points,a,b=None):
+        if(b==None):
+            b=a
+        self.points=points
+        self.sides=[points[0]+a,points[1]+b]
+
+    def __call__(self,n):
+        def unif_helper(i): 
+            return np.random.uniform(low=self.points[i], high=self.sides[i])                   
+        return [ np.array([unif_helper(0),unif_helper(1)])
+                  for i in range(n) ]
 
 class GetCat(object):
     def __init__(self,preds):
