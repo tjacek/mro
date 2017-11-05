@@ -33,6 +33,14 @@ class KNN(object):
         else:
             return pred
 
+class Condensate(object):
+    def __init__(self,k):
+        self.k=k 
+
+    def __call__(self,dataset):
+        data1=remove_outliners(dataset,self.k)  
+        return remove_redundant(data1,self.k)
+
 def remove_outliners(dataset,k=1):
     knn=KNN(k)
     knn.train(dataset)

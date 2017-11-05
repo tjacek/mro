@@ -24,6 +24,11 @@ class Dataset(object):
     def __getitem__(self,i):
         return self.X[i],self.y[i]
     
+    def __add__(self,other_dataset):
+        self.X=self.X+other_dataset.X
+        self.y=self.y+other_dataset.y
+        return self
+
     def add(self,x_i,y):
         self.X.append(x_i)
         self.y.append(y)

@@ -25,13 +25,15 @@ def make_gen3():
 def get_non_convex():
     return gen.preds.SimpleNonConvex([1.0,1.0],[-1.0,1.0],[0.0,0.0],[0.0,-1.0])
 
-#metr=['mahalo','lmnn']
 my_gen=make_gen2()
-dataset=my_gen(1000)
-dataset.show()
-s_dataset=knn.remove_outliners(dataset)
+exp1=exp.SelectExperiment(my_gen,knn.KNN(k=1),knn.Condensate(k=1))
+exp1(500,True)
+#metr=['mahalo','lmnn']
+#dataset=my_gen(1000)
+#dataset.show()
+#s_dataset=knn.remove_outliners(dataset)
 #s_dataset.show()
-s_dataset=knn.remove_redundant(dataset)
-s_dataset.show()
+#s_dataset=knn.remove_redundant(dataset)
+#s_dataset.show()
 #exp1=exp.Experiment(my_gen,knn.KNN(k=1,metric='lmnn'))#'mahalo'))
 #exp1(250,True)
