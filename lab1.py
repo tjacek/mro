@@ -17,17 +17,21 @@ def make_gen2():
     return my_gen
 
 def make_gen3():
-    dist=gen.UniformDist([-5.0,-5.0],10.0)
-    preds=[gen.preds.ElipticCurve(0.9,2.5)]
+    dist=gen.dists.UniformDist([-5.0,-5.0],10.0)
+    over_triang=gen.preds.OverlapingTriangles([-3.0,2.0],[-2.0,0.0],[-1.0,2.0],1.0)
+    preds=[over_triang,gen.preds.ElipticCurve(0.9,2.5)]
     my_gen=gen.GenerateDataset(dist,preds)
     return my_gen
 
 def get_non_convex():
     return gen.preds.SimpleNonConvex([1.0,1.0],[-1.0,1.0],[0.0,0.0],[0.0,-1.0])
 
-my_gen=make_gen2()
-exp1=exp.SelectExperiment(my_gen,knn.KNN(k=1),knn.Condensate(k=1))
-exp1(500,True)
+my_gen=make_gen3()
+dataset=my_gen(1500)
+dataset.show()
+#exp1=exp.SelectExperiment(my_gen,knn.KNN(k=1),knn.Condensate(k=1))
+#exp1(500,True)
+
 #metr=['mahalo','lmnn']
 #dataset=my_gen(1000)
 #dataset.show()

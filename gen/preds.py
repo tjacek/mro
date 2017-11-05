@@ -1,5 +1,6 @@
 import numpy as np
 import gen.triangle
+import copy
 
 class SimpleNonConvex(object):
     def __init__(self,p1,p2,p3,p4):
@@ -23,6 +24,15 @@ class ReflectedTriangles(object):
         p4=[p1[0],-p1[1]]
         p5=[p3[0],-p3[1]]
         self.triangle2=gen.triangle.InTriangle(p4,p2,p5)
+
+    def __call__(self,p_n):
+        return (self.triangle1(p_n) or self.triangle2(p_n))
+
+class OverlapingTriangles(object):
+    def __init__(self, p1,p2,p3,h=3.0):#,p4,p5):
+        self.triangle1=gen.triangle.InTriangle(p1,p2,p3)
+        self.triangle2=copy.deepcopy(self.triangle1)
+        self.triangle2.translate(y=h)
 
     def __call__(self,p_n):
         return (self.triangle1(p_n) or self.triangle2(p_n))
