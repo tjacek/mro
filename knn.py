@@ -1,8 +1,7 @@
 import numpy as np
-import matplotlib.pyplot as plt
-from matplotlib.colors import ListedColormap
 from sklearn import neighbors, datasets
 import metric_learn
+import gen
 
 class KNN(object):
     def __init__(self,k=1,metric=None):
@@ -34,27 +33,28 @@ class KNN(object):
         else:
             return pred
 
-def decision_boundary(dataset,clf,h=0.02):
-    cmap_light = ListedColormap(['#FFAAAA', '#AAFFAA', '#AAAAFF'])
-    cmap_bold = ListedColormap(['#FF0000', '#00FF00', '#0000FF'])
-    
-    X=np.array(dataset.X)
+def remove_outliners(dataset,k=1):
+    knn=KNN(k)
+    knn.train(dataset)
+    no_outliners=[]
+    for i,x_i in enumerate(dataset.X):
+        pred_i=knn(x_i)
+        if(pred_i==dataset.y[i]):
+            no_outliners.append(i)
+    return dataset.select(no_outliners)
 
-    x_min, x_max = X[:, 0].min() - 1, X[:, 0].max() + 1
-    y_min, y_max = X[:, 1].min() - 1, X[:, 1].max() + 1
-    xx, yy = np.meshgrid(np.arange(x_min, x_max, h),
-                         np.arange(y_min, y_max, h))
-
-    Z=clf(np.c_[xx.ravel(), yy.ravel()],single=False)
-    Z = Z.reshape(xx.shape)
-    plt.figure()
-    plt.pcolormesh(xx, yy, Z, cmap=cmap_light)
-
-    plt.scatter(X[:, 0], X[:, 1], c=dataset.y, cmap=cmap_bold,
-                edgecolor='k', s=20)
-    plt.xlim(xx.min(), xx.max())
-    plt.ylim(yy.min(), yy.max())
-#    plt.title("3-Class classification (k = %i, weights = '%s')"
-#              % (n_neighbors, weights))
-
-    plt.show()
+def remove_redundant(dataset,k=1):
+    def train_knn(dataset):
+        knn=KNN(k)
+        knn.train(dataset)
+        return knn
+    x_0,y_0=dataset[0]
+    new_dataset=gen.Dataset([x_0],[y_0])
+    knn_model=train_knn(new_dataset)
+    for i in range(len(dataset)):
+        x_i,y_i=dataset[i]
+        pred_y=knn_model(x_i)
+        if(pred_y!=y_i):
+            new_dataset.add(x_i,y_i)
+            knn_model=train_knn(new_dataset)
+    return new_dataset

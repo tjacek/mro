@@ -24,6 +24,10 @@ class Dataset(object):
     def __getitem__(self,i):
         return self.X[i],self.y[i]
     
+    def add(self,x_i,y):
+        self.X.append(x_i)
+        self.y.append(y)
+
     def select(self,check):
         if(type(check)==list):
             check=SetCheck(check)
