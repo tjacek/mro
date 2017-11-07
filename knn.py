@@ -57,7 +57,10 @@ def remove_redundant(dataset,k=1):
         knn.train(dataset)
         return knn
     x_0,y_0=dataset[0]
-    new_dataset=gen.Dataset([x_0],[y_0])
+    new_dataset=gen.Dataset([],[])
+    for i in range(k):
+        x_i,y_i=dataset[i]
+        new_dataset.add(x_i,y_i)
     knn_model=train_knn(new_dataset)
     for i in range(len(dataset)):
         x_i,y_i=dataset[i]
