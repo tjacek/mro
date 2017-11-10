@@ -12,14 +12,17 @@ class NormalDist(object):
         return points
 
 class UniformDist(object):
-    def __init__(self, points,a,b=None):
-        if(b==None):
-            b=a
-        self.points=points
-        self.sides=[points[0]+a,points[1]+b]
+    def __init__(self, start,width):
+        self.dim=start.shape[0]
+        if(type(width)==float):
+            width=[width for i in range(self.dim) ]
+        self.start=start
+        self.end=[ start_i+width_i 
+                    for start_i,width_i in zip(start,width)]
 
     def __call__(self,n):
-        def unif_helper(i): 
-            return np.random.uniform(low=self.points[i], high=self.sides[i])                   
-        return [ np.array([unif_helper(0),unif_helper(1)])
-                  for i in range(n) ]
+        def unif_helper(i):
+            return np.random.uniform(low=self.points[i], high=self.sides[i])        
+        return [ np.array([unif_helper(i) for i in range(self.dim)])
+                   for i in range(n) ]
+
