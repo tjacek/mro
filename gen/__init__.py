@@ -46,17 +46,6 @@ class Dataset(object):
     def labels(self):
         return list(Set(self.y))
     
-    def show(self):
-        if(self.dim==2):
-            fig, ax = plt.subplots()
-            for label_j in self.labels():
-    	        x_0,x_1=self.get_cat(label_j)
-                ax.scatter(x_0,x_1,label=label_j)
-            plt.legend()
-            plt.show()
-        else:
-            raise Exception("Too many dims")
-
     def get_cat(self,cat_i):
     	points=[ point_i 
     	         for i,point_i in enumerate(self.X)

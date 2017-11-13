@@ -2,6 +2,17 @@ import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib.colors import ListedColormap
 
+def show(dataset):
+    if(dataset.dim==2):
+        fig, ax = plt.subplots()
+        for label_j in dataset.labels():
+            x_0,x_1=dataset.get_cat(label_j)
+            ax.scatter(x_0,x_1,label=label_j)
+        plt.legend()
+        plt.show()
+    else:
+        raise Exception("Too many dims")
+
 def decision_boundary(dataset,clf,h=0.02):
     cmap_light = ListedColormap(['#FFAAAA', '#AAFFAA', '#AAAAFF'])
     cmap_bold = ListedColormap(['#FF0000', '#00FF00', '#0000FF'])
@@ -22,7 +33,4 @@ def decision_boundary(dataset,clf,h=0.02):
                 edgecolor='k', s=20)
     plt.xlim(xx.min(), xx.max())
     plt.ylim(yy.min(), yy.max())
-#    plt.title("3-Class classification (k = %i, weights = '%s')"
-#              % (n_neighbors, weights))
-
     plt.show()
