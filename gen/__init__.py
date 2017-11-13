@@ -55,6 +55,13 @@ class Dataset(object):
         x_1=data[:,1]
         return x_0,x_1
 
+    def add_cat(self,x,y):
+        size_n=len(x)
+        if(type(y)!=list):
+            y=[y for i in range(size_n)]
+        self.X+=x
+        self.y+=y
+
 class Modulo(object):
     def __init__(self,k):
         self.k=k
