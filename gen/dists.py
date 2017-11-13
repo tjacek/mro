@@ -2,6 +2,7 @@ import numpy as np
 
 class NormalDist(object):
     def __init__(self, sigma=1.0,mu=0.0, dim=2):
+        self.dim=2
         self.mu=mu
         self.sigma=sigma
         self.dim=dim
@@ -13,6 +14,8 @@ class NormalDist(object):
 
 class UniformDist(object):
     def __init__(self, start,width):
+        if(type(start)==list):
+            start=np.array(start)
         self.dim=start.shape[0]
         if(type(width)==float):
             width=[width for i in range(self.dim) ]
@@ -22,7 +25,7 @@ class UniformDist(object):
 
     def __call__(self,n):
         def unif_helper(i):
-            return np.random.uniform(low=self.points[i], high=self.sides[i])        
+            return np.random.uniform(low=self.start[i], high=self.end[i])        
         return [ np.array([unif_helper(i) for i in range(self.dim)])
                    for i in range(n) ]
 

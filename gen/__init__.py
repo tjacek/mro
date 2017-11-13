@@ -17,7 +17,7 @@ class Dataset(object):
     def __init__(self,X,y):
         self.X=X
         self.y=y
-        self.dim=X.shape[1]
+        self.dim=X[0].shape[0]
 
     def __len__(self):
         return len(self.y)
