@@ -1,5 +1,5 @@
 import numpy as np 
-import gen,gen.dists,gen.conic,utils
+import gen,gen.dists,gen.conic,gen.spiral,utils
 import pca,visualization
 
 def pca_exp(n,dim):
@@ -26,15 +26,12 @@ def make_spherical_gen():
     	                          theta_preds=[utils.MultiScalarPred([0,0],[1,1]),
     	                                       utils.MultiScalarPred([-1,-1],[0,0])],
     	                          conj_theta=False)
-    pred4=gen.conic.SphericalPred(r_preds=[utils.scalar_pred(3.0,False)],
-    	                          theta_preds=[utils.MultiScalarPred([0,-1],[1,0]),
-    	                                       utils.MultiScalarPred([-1,0],[0,1])],
-    	                          conj_theta=False)
     preds=[pred1,pred2,pred3]
     my_gen=gen.GenerateDataset(dist,preds)
     return my_gen
 
 #pca_exp(500,7)
-gen=make_spherical_gen()
-dataset=gen(500)
+#gen=make_spherical_gen()
+#dataset=gen(500)
+dataset=gen.spiral.make_spiral_dataset(50,4)
 visualization.show(dataset)
