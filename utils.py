@@ -14,3 +14,20 @@ def all_seq(length,base_symbols,seqs=[]):
     if(not new_seqs):
         new_seqs=[ [base_i] for base_i in base_symbols]   
     return all_seq(length-1,base_symbols,new_seqs)
+
+def scalar_pred(scalar,less=True):
+    if(less):
+        return lambda x: x<scalar
+    else:
+        return lambda x: x>scalar
+
+class MultiScalarPred(object):
+    def __init__(self,lower,upper):
+        self.lower=lower
+        self.upper=upper
+    
+    def __call__(self,point):
+        bool_values=[ self.lower[i]<point_i and point_i<self.upper[i]  
+                        for i,point_i in enumerate(point)]
+        return any(bool_values)
+    
