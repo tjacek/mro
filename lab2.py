@@ -3,12 +3,20 @@ import gen,gen.dists,gen.conic,gen.spiral,utils
 import pca,visualization
 
 def pca_exp(n,dim):
-    sphere_gen=make_sphere_gen(dim)
+    hyper_gen=make_hyper_gen(dim)
     corners=utils.all_seq(dim,[-1,1])
     dataset=hyper_gen(n)
     dataset.add_cat(corners,2)
     red_dataset=pca.transform_pca(dataset)
     visualization.show(red_dataset)
+
+def kernel_exp(n,gen,kernel="rbf", gamma=10):
+    dataset=gen(n)
+    pca.show_pca(dataset)
+    new_dataset=pca.transform_pca(dataset)
+    visualization.show(new_dataset)
+    kern_dataset=pca.transform_kernel(dataset,kernel="rbf", gamma=10)
+    visualization.show(kern_dataset)
 
 def make_hyper_gen(dim):
     start=[ -1.0 for i in range(dim)]
@@ -30,8 +38,7 @@ def make_spherical_gen():
     my_gen=gen.GenerateDataset(dist,preds)
     return my_gen
 
-#pca_exp(500,7)
-#gen=make_spherical_gen()
-#dataset=gen(500)
-dataset=gen.spiral.make_spiral_dataset(50,4)
-visualization.show(dataset)
+#pca_exp(500,13)
+gen=make_spherical_gen()
+#dataset=gen.spiral.make_spiral_dataset(50,4)
+kernel_exp(300,gen)
