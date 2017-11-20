@@ -1,5 +1,10 @@
 from sets import Set
 import copy
+import cv2
+
+def read_img(path):
+    raw_img=cv2.imread(str(dir_path),cv2.IMREAD_GRAYSCALE) 
+    return raw_img 
 
 def all_seq(length,base_symbols,seqs=[]):
     if(length==0):
