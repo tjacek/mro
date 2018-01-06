@@ -3,9 +3,12 @@ from sets import Set
 import matplotlib.pyplot as plt
 
 class GenerateDataset(object):
-    def __init__(self,dist, preds):
+    def __init__(self,dist, preds=None):
         self.dist=dist
-        self.get_cat=GetCat(preds)	
+        if(preds is None):
+            self.get_cat=preds=lambda x:True
+        else:
+            self.get_cat=GetCat(preds)	
 
     def __call__(self,n):
         X=self.dist(n)
@@ -17,7 +20,7 @@ class Dataset(object):
     def __init__(self,X,y):
         self.X=X
         self.y=y
-        self.dim=X[0].shape[0]
+        self.dim=get_dim(X)
 
     def __len__(self):
         return len(self.y)
@@ -61,6 +64,12 @@ class Dataset(object):
             y=[y for i in range(size_n)]
         self.X+=x
         self.y+=y
+
+def get_dim(X):
+    if(type(X)==list):
+        return X[0].shape[0]
+    print(X.shape)    
+    return X.shape[1]
 
 class Modulo(object):
     def __init__(self,k):
