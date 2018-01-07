@@ -3,7 +3,7 @@ import matplotlib.pyplot as plt
 from matplotlib.colors import ListedColormap
 
 def show_scatter(x,y,errors):
-    plt.errorbar(x, y, yerr=e, fmt='o')
+    plt.errorbar(x, y, yerr=errors, fmt='o')
     plt.show()
 
 def show(dataset):

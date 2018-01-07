@@ -1,4 +1,5 @@
 import exp
+import visualization
 
 class SimpleExperiment(exp.TrainExperiment):
     def __init__(self,gen,model):
