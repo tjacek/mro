@@ -1,23 +1,6 @@
-import gen
-import numpy as np
-from sklearn.metrics import confusion_matrix
-from sklearn.metrics import classification_report
-import knn,visualization
+import exp
 
-class Experiment(object):
-    def __init__(self,gen,model):
-        self.gen=gen
-        self.model=model
-
-    def pred(self,dataset):
-    	return [ self.model(x_i) for x_i in dataset.X]
-
-    def split(self,dataset):
-        train=dataset.select(gen.Modulo(0))
-        test=dataset.select(gen.Modulo(1))
-        return train,test
-
-class SimpleExperiment(Experiment):
+class SimpleExperiment(exp.TrainExperiment):
     def __init__(self,gen,model):
         super(SimpleExperiment, self).__init__(gen,model)
                 
@@ -31,7 +14,7 @@ class SimpleExperiment(Experiment):
         if(show):
             visualization.decision_boundary(dataset,self.model)
 
-class SelectExperiment(Experiment):
+class SelectExperiment(exp.TrainExperiment):
     def __init__(self,gen,model,select_fun):
         super(SelectExperiment, self).__init__(gen,model)
         self.select_fun=select_fun
