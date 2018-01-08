@@ -1,5 +1,18 @@
 import numpy as np
 
+class CompositeDist(object):
+    def __init__(self, dists):
+        self.dists=dists
+
+    def __call__(self):
+        n_dist=len(self)
+        index=np.random.randint(range(n_dist))
+        return self.dists[index]()
+        
+    def __len__(self):
+        return len(self.dists)
+        
+
 class NormalDist(object):
     def __init__(self, sigma=1.0,mu=0.0, dim=2):
         self.dim=2
