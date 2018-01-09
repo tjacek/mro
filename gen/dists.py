@@ -5,8 +5,7 @@ class CompositeDist(object):
         self.dists=dists
 
     def __call__(self):
-        n_dist=len(self)
-        index=np.random.randint(range(n_dist))
+        index=np.random.randint(len(self))
         return self.dists[index]()
         
     def __len__(self):
@@ -20,7 +19,7 @@ class NormalDist(object):
         self.sigma=sigma
         self.dim=dim
 
-    def __call__(self,n):
+    def __call__(self,n=1):
         points= [np.random.normal(self.mu, self.sigma,self.dim)		
          		    for i in range(n)]
         return points
