@@ -1,6 +1,6 @@
 import numpy as np
 from sets import Set
-import matplotlib.pyplot as plt
+import visualization
 
 class GenerateDataset(object):
     def __init__(self,dist, preds=None):
@@ -11,7 +11,8 @@ class GenerateDataset(object):
             self.get_cat=GetCat(preds)	
 
     def __call__(self,n):
-        X=self.dist(n)
+        X=np.array([self.dist() for i in range(n)])
+        X=np.squeeze(X)
         y=[self.get_cat(point_i)
             for point_i in X]
         return Dataset(X,y)
@@ -64,6 +65,9 @@ class Dataset(object):
             y=[y for i in range(size_n)]
         self.X+=x
         self.y+=y
+
+    def show(self):
+        visualization.show(self)
 
 def get_dim(X):
     if(type(X)==list):
