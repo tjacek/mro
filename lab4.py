@@ -1,5 +1,7 @@
 import numpy as np
 import gen,gen.dists
+import cluster
+import visualization
 
 def get_cluster_generator(sigma=0.5,n=3,step=5.0):
     x=[ (i+1)*step for i in xrange(n) ]
@@ -12,6 +14,8 @@ def get_cluster_generator(sigma=0.5,n=3,step=5.0):
     return  gen.GenerateDataset(clust_gen)
 
 clust_gen=get_cluster_generator()
-data=clust_gen(500)
-#print(data.dim)
-data.show()
+basic_data=clust_gen(500)
+cls_alg=cluster.KMeans(cluster.uniform_init)
+cls_alg.start(basic_data)
+cls_data=cls_alg.get_result()
+visualization.show(cls_data,legend=False)
