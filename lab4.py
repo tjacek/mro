@@ -17,5 +17,7 @@ clust_gen=get_cluster_generator()
 basic_data=clust_gen(500)
 cls_alg=cluster.KMeans(cluster.uniform_init)
 cls_alg.start(basic_data)
+for i in range(100):
+    cls_alg()
 cls_data=cls_alg.get_result()
 visualization.show(cls_data,legend=False)
