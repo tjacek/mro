@@ -13,8 +13,6 @@ class KMeans(object):
     def start(self,dataset):
         self.points=dataset.get_points()
         self.means=self.init(self.points,self.k)
-        print("&&&&&&&&&&&&&")
-        print(self.means)
 
     def get_result(self):
         return gen.Dataset(self.points,self.assign)
@@ -37,10 +35,3 @@ class KMeans(object):
                         if(self.assign[j]==cls_i)]
         cluster=np.array(cluster)
         return np.mean(cluster)	
-
-def uniform_init(points,k):
-    points=np.array(points)
-    min_p=np.min(points,axis=0)
-    max_p=np.max(points,axis=0)
-    return [np.random.uniform(min_p,max_p) 
-	            for i in range(k)]
