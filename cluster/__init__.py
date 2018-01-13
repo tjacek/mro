@@ -5,7 +5,10 @@ class Clustering(object):
     def __init__(self,clusters,centroids):
         self.clusters=clusters
         self.centroids=centroids
-        
+    
+    def scatter(self,i):
+        return sum([ L2(point_j-self.centroids[i])
+                        for point_j in self.clusters[i]])
     
 class KMeans(object):
     def __init__(self, init,k=9):
