@@ -1,6 +1,12 @@
 import numpy as np 
 import gen
 
+class Clustering(object):
+    def __init__(self,clusters,centroids):
+        self.clusters=clusters
+        self.centroids=centroids
+        
+    
 class KMeans(object):
     def __init__(self, init,k=9):
         self.init=init
@@ -14,24 +20,35 @@ class KMeans(object):
         self.points=dataset.get_points()
         self.means=self.init(self.points,self.k)
 
+    def get_clustering(self):
+        clusters=[self.get_cluster(i)
+                    for i in range(self.k)]
+        return Clustering( self.means)
+    
     def get_result(self):
         return gen.Dataset(self.points,self.assign)
 
     def __call__(self):
-        self.assign=[ self.get_cluster(point_i)
+        self.assign=[ self.assign_cluster(point_i)
                         for point_i in self.points]
-        self.means=[self.recompute_mean(cls_i)
+        self.means=[self.get_centroid(cls_i)
                         for cls_i in range(self.k)]
         self.iters+=1
 
-    def get_cluster(self,point_i):
-        dist=[np.linalg.norm(point_i-mean_j)
+    def assign_cluster(self,point_i):
+        dist=[L2(point_i-mean_j)
                 for mean_j in self.means]
         return np.argmin(dist)
 
-    def recompute_mean(self,cls_i):
-        cluster=[ point_i
+    def get_cluster(self,cls_i):
+        return [ point_i
                     for j,point_i in enumerate(self.points)
                         if(self.assign[j]==cls_i)]
+        
+    def get_centroid(self,cls_i):
+        cluster=self.get_cluster(cls_i)
         cluster=np.array(cluster)
-        return np.mean(cluster)	
+        return np.mean(cluster)
+
+def L2(point_i):
+    return np.linalg.norm(point_i, ord=2)	
