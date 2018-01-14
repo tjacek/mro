@@ -10,6 +10,9 @@ class Clustering(object):
         return np.mean([L2(point_j-self.centroids[i])
                         for point_j in self.clusters[i]])
     
+    def separation(self,i,j):
+        return L2(self.centroids[i] - self.centroids[j])
+
 class KMeans(object):
     def __init__(self, init,k=9):
         self.init=init
