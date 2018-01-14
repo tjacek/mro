@@ -7,7 +7,7 @@ class Clustering(object):
         self.centroids=centroids
     
     def scatter(self,i):
-        return sum([ L2(point_j-self.centroids[i])
+        return np.mean([L2(point_j-self.centroids[i])
                         for point_j in self.clusters[i]])
     
 class KMeans(object):
