@@ -5,7 +5,11 @@ class Clustering(object):
     def __init__(self,clusters,centroids):
         self.clusters=clusters
         self.centroids=centroids
+        print(self.centroids)
     
+    def __len__(self):
+        return len(self.clusters)
+
     def scatter(self,i):
         return np.mean([L2(point_j-self.centroids[i])
                         for point_j in self.clusters[i]])
@@ -29,7 +33,7 @@ class KMeans(object):
     def get_clustering(self):
         clusters=[self.get_cluster(i)
                     for i in range(self.k)]
-        return Clustering( self.means)
+        return Clustering(clusters,self.means)
     
     def get_result(self):
         return gen.Dataset(self.points,self.assign)
@@ -54,7 +58,7 @@ class KMeans(object):
     def get_centroid(self,cls_i):
         cluster=self.get_cluster(cls_i)
         cluster=np.array(cluster)
-        return np.mean(cluster)
+        return np.mean(cluster,axis=0)
 
 def L2(point_i):
     return np.linalg.norm(point_i, ord=2)	
