@@ -17,48 +17,41 @@ class Clustering(object):
     def separation(self,i,j):
         return L2(self.centroids[i] - self.centroids[j])
 
+    def as_dataset(self):
+        points=[]
+        y=[]
+        for j,cls_j in enumerate(self.clusters):
+            for point_i in cls_j:
+                points.append(point_i)
+                y.append(j)
+        return gen.Dataset(points,y)
+
 class KMeans(object):
     def __init__(self, init,k=9):
         self.init=init
         self.k=k
-        self.points=None
-        self.assign=None
-        self.means=None
-        self.iters=0
+        self.clustering=None
 
     def start(self,dataset):
-        self.points=dataset.get_points()
-        self.means=self.init(self.points,self.k)
-
-    def get_clustering(self):
-        clusters=[self.get_cluster(i)
-                    for i in range(self.k)]
-        return Clustering(clusters,self.means)
-    
-    def get_result(self):
-        return gen.Dataset(self.points,self.assign)
+        points=dataset.get_points()
+        clusters=[dataset.get_cat(i) for i in range(self.k)]
+        means=self.init(points,self.k)
+        self.clustering=Clustering(clusters,means)
 
     def __call__(self):
-        self.assign=[ self.assign_cluster(point_i)
-                        for point_i in self.points]
-        self.means=[self.get_centroid(cls_i)
-                        for cls_i in range(self.k)]
-        self.iters+=1
+        new_clusters=[[] for i in range(self.k)]
+        for cls_j in self.clustering.clusters:
+            for point_i in cls_j:
+                new_cls=self.assign_cluster(point_i)
+                new_clusters[new_cls].append(point_i)
+        new_centroids=[ np.mean(cls_i,axis=0)
+                        for cls_i in new_clusters]
+        self.clustering=Clustering(new_clusters,new_centroids)
 
     def assign_cluster(self,point_i):
-        dist=[L2(point_i-mean_j)
-                for mean_j in self.means]
+        dist=[L2(point_i-centroid_j)
+                for centroid_j in self.clustering.centroids]
         return np.argmin(dist)
-
-    def get_cluster(self,cls_i):
-        return [ point_i
-                    for j,point_i in enumerate(self.points)
-                        if(self.assign[j]==cls_i)]
-        
-    def get_centroid(self,cls_i):
-        cluster=self.get_cluster(cls_i)
-        cluster=np.array(cluster)
-        return np.mean(cluster,axis=0)
 
 def L2(point_i):
     return np.linalg.norm(point_i, ord=2)	

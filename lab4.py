@@ -16,9 +16,8 @@ class ClusterExperiment(object):
         cls_alg.start(basic_data)
         for i in range(n_iters):
             cls_alg()
-        clustering=cls_alg.get_clustering()
-        print(self.cls_quality(clustering))
-        cls_data=cls_alg.get_result()
+        print(self.cls_quality(cls_alg.clustering))
+        cls_data=cls_alg.clustering.as_dataset()
         visualization.show(cls_data,legend=False)
 
 def get_cluster_generator(sigma=0.3,n=3,step=5.0):
