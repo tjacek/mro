@@ -11,16 +11,31 @@ class ClusterExperiment(object):
         self.cls_alg=cls_alg
         self.cls_quality=cls_quality
 
-    def __call__(self,n_iters=500,n_points=500,show=True):
-        basic_data=self.cls_gen(n_points)
-        self.cls_alg.start(basic_data)
+    def iter_quality(self,n_iters=500,n_points=500,show=True):
+        self.__start__(n_points)
         iter_quality=[ self.cls_quality(self.cls_alg()) 
                         for i in range(n_iters)]
         if(show):    
             cls_data=cls_alg.clustering.as_dataset()
             visualization.show(cls_data,legend=False)
         return iter_quality
-        
+
+    def points_quality(self,n_iters=150,n_points=500, epochs=3):
+        basic_data=self.__start__(n_points)
+        points=basic_data.get_points()
+        def epoch_helper(i):
+            points_quality=cluster.quality.SilhouetteQuality(self.cls_alg.clustering)
+            for j in range(n_iters):
+                self.cls_alg()
+            return [ points_quality(point_i) for point_i in points]
+        return [ epoch_helper(i) 
+                    for i in range(epochs)]
+
+    def __start__(self,n_points):
+        basic_data=self.cls_gen(n_points)
+        self.cls_alg.start(basic_data)
+        return basic_data
+
 def get_cluster_generator(sigma=0.3,n=3,step=5.0):
     x=[ (i+1)*step for i in xrange(n) ]
     mu=[ (x_i,x_j)  
@@ -33,4 +48,4 @@ def get_cluster_generator(sigma=0.3,n=3,step=5.0):
 
 cls_alg=cluster.KMeans(cls_init.kmeans_plus)
 cls_exp=ClusterExperiment(cls_alg, cluster.quality.DBI_quality)
-print(cls_exp())
+print(cls_exp.points_quality())
