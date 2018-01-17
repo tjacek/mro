@@ -16,6 +16,10 @@ class Clustering(object):
     
     def separation(self,i,j):
         return L2(self.centroids[i] - self.centroids[j])
+    
+    def avg_distance(self,point_i,cls_i):
+        return np.mean([ L2(point_j-point_i) 
+                          for point_j in self.clusters[cls_i]])
 
     def as_dataset(self):
         points=[]
@@ -42,17 +46,17 @@ class KMeans(object):
         new_clusters=[[] for i in range(self.k)]
         for cls_j in self.clustering.clusters:
             for point_i in cls_j:
-                new_cls=self.assign_cluster(point_i)
+                new_cls=assign_cluster(point_i,self.clustering.centroids)
                 new_clusters[new_cls].append(point_i)
         new_centroids=[ np.mean(cls_i,axis=0)
                         for cls_i in new_clusters]
         self.clustering=Clustering(new_clusters,new_centroids)
         return self.clustering
 
-    def assign_cluster(self,point_i):
-        dist=[L2(point_i-centroid_j)
-                for centroid_j in self.clustering.centroids]
-        return np.argmin(dist)
+def assign_cluster(point_i,centroids):
+    dist=[L2(point_i-centroid_j)
+            for centroid_j in centroids]
+    return np.argmin(dist)
 
 def L2(point_i):
     return np.linalg.norm(point_i, ord=2)	
