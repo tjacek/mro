@@ -12,7 +12,9 @@ def show(dataset,legend=True):
     if(dataset.dim==2):
         fig, ax = plt.subplots()
         for label_j in dataset.labels():
-            x_0,x_1=dataset.get_cat(label_j)
+            data=dataset.get_cat(label_j)
+            x_0=data[:,0]
+            x_1=data[:,1]
             ax.scatter(x_0,x_1,label=label_j)
         if(legend):
             plt.legend()

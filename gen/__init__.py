@@ -19,6 +19,8 @@ class GenerateDataset(object):
 
 class Dataset(object):
     def __init__(self,X,y):
+        if(type(X)==list):
+            X=np.array(X)
         self.X=X
         self.y=y
         self.dim=get_dim(X)
@@ -50,14 +52,13 @@ class Dataset(object):
     def labels(self):
         return list(Set(self.y))
     
-    def get_cat(self,cat_i):
+    def get_cat(self,cat_i,as_list=False):
     	points=[ point_i 
     	         for i,point_i in enumerate(self.X)
     	           if self.y[i]==cat_i]
-        data=np.array(points)
-        x_0=data[:,0]
-        x_1=data[:,1]
-        return x_0,x_1
+        if(as_list):
+            return points
+        return np.array(points)
 
     def add_cat(self,x,y):
         size_n=len(x)
@@ -68,6 +69,9 @@ class Dataset(object):
 
     def show(self):
         visualization.show(self)
+
+    def get_points(self):
+        return [x_i for x_i in self.X]
 
 def get_dim(X):
     if(type(X)==list):
