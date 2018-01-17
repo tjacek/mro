@@ -11,15 +11,16 @@ class ClusterExperiment(object):
         self.cls_alg=cls_alg
         self.cls_quality=cls_quality
 
-    def __call__(self,n_iters=500,n_points=500):
+    def __call__(self,n_iters=500,n_points=500,show=True):
         basic_data=self.cls_gen(n_points)
-        cls_alg.start(basic_data)
-        for i in range(n_iters):
-            cls_alg()
-        print(self.cls_quality(cls_alg.clustering))
-        cls_data=cls_alg.clustering.as_dataset()
-        visualization.show(cls_data,legend=False)
-
+        self.cls_alg.start(basic_data)
+        iter_quality=[ self.cls_quality(self.cls_alg()) 
+                        for i in range(n_iters)]
+        if(show):    
+            cls_data=cls_alg.clustering.as_dataset()
+            visualization.show(cls_data,legend=False)
+        return iter_quality
+        
 def get_cluster_generator(sigma=0.3,n=3,step=5.0):
     x=[ (i+1)*step for i in xrange(n) ]
     mu=[ (x_i,x_j)  
@@ -32,4 +33,4 @@ def get_cluster_generator(sigma=0.3,n=3,step=5.0):
 
 cls_alg=cluster.KMeans(cls_init.kmeans_plus)
 cls_exp=ClusterExperiment(cls_alg, cluster.quality.DBI_quality)
-cls_exp()
+print(cls_exp())

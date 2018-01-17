@@ -47,6 +47,7 @@ class KMeans(object):
         new_centroids=[ np.mean(cls_i,axis=0)
                         for cls_i in new_clusters]
         self.clustering=Clustering(new_clusters,new_centroids)
+        return self.clustering
 
     def assign_cluster(self,point_i):
         dist=[L2(point_i-centroid_j)
