@@ -11,6 +11,8 @@ class Clustering(object):
         return len(self.clusters)
 
     def scatter(self,i):
+        if(self.is_empty(i)):
+            return 0.0
         return np.mean([L2(point_j-self.centroids[i])
                         for point_j in self.clusters[i]])
     
@@ -18,6 +20,8 @@ class Clustering(object):
         return L2(self.centroids[i] - self.centroids[j])
     
     def avg_distance(self,point_i,cls_i):
+        if(self.is_empty(cls_i)):
+            return np.inf
         return np.mean([ L2(point_j-point_i) 
                           for point_j in self.clusters[cls_i]])
 
@@ -29,6 +33,9 @@ class Clustering(object):
                 points.append(point_i)
                 y.append(j)
         return gen.Dataset(points,y)
+
+    def is_empty(self,i):
+        return len(self.clusters[i])==0
 
 class KMeans(object):
     def __init__(self, init,k=9):
