@@ -52,7 +52,7 @@ def init_experiment(n_iters=300,n_epochs=5,n_points=100):
         return np.mean(alg_quality,axis=0),np.std(alg_quality,axis=0)               
     results={ name_i:init_helper(cls_alg_i)
                 for name_i,cls_alg_i in cls_alg.items()}
-    visualization.show_dict(results)
+    visualization.show_dict(results,labels=('number_of_iterations','DB_index'))
 
 def get_cluster_generator(sigma=0.3,n=3,step=5.0):
     x=[ (i+1)*step for i in xrange(n) ]
