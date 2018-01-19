@@ -3,11 +3,12 @@ import random
 import cluster
 
 def uniform_init(points,k):
-    points=np.array(points)
-    min_p=np.min(points,axis=0)
-    max_p=np.max(points,axis=0)
-    return [np.random.uniform(min_p,max_p) 
-	            for i in range(k)]
+    init_clusters=cluster.empty_clusters(k)
+    for point_i in points:
+        cls_i=np.random.randint(k)
+        init_clusters[cls_i].append(point_i)
+    return [np.mean(cluster_j,axis=0) 
+                for cluster_j in init_clusters]   
 
 def forgy_init(points,k):
     random.shuffle(points)
@@ -16,7 +17,6 @@ def forgy_init(points,k):
 def partition_init(points,k):
     random_cls=[np.random.randint(k) 
                 for point_i in points]
-    print(random_cls)
     def cls_helper(i):
         cluster_i=[ point_j
                     for j,point_j in enumerate(points)

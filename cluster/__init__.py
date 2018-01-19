@@ -17,6 +17,8 @@ class Clustering(object):
                         for point_j in self.clusters[i]])
     
     def separation(self,i,j):
+        if(self.is_empty(i) or self.is_empty(j)):
+            return np.inf
         return L2(self.centroids[i] - self.centroids[j])
     
     def avg_distance(self,point_i,cls_i):
@@ -50,7 +52,7 @@ class KMeans(object):
         self.clustering=Clustering(clusters,means)
 
     def __call__(self):
-        new_clusters=[[] for i in range(self.k)]
+        new_clusters=empty_clusters(self.k)
         for cls_j in self.clustering.clusters:
             for point_i in cls_j:
                 new_cls=assign_cluster(point_i,self.clustering.centroids)
@@ -65,5 +67,8 @@ def assign_cluster(point_i,centroids):
             for centroid_j in centroids]
     return np.argmin(dist)
 
+def empty_clusters(n_clust):
+    return [[] for i in range(n_clust)]
+
 def L2(point_i):
-    return np.linalg.norm(point_i, ord=2)	
+    return np.linalg.norm(point_i, ord=2)
