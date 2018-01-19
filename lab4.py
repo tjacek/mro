@@ -11,7 +11,7 @@ class ClusterExperiment(object):
         self.cls_alg=cls_alg
         self.cls_quality=cls_quality
 
-    def iter_quality(self,n_iters=500,n_points=500,show=True):
+    def iters_quality(self,n_iters=50,n_points=500,show=True):
         self.__start__(n_points)
         iter_quality=[ self.cls_quality(self.cls_alg()) 
                         for i in range(n_iters)]
@@ -36,6 +36,24 @@ class ClusterExperiment(object):
         self.cls_alg.start(basic_data)
         return basic_data
 
+def init_experiment(n_iters=300,n_epochs=5,n_points=100):
+    def alg_helper(init_i):
+        cls_alg=cluster.KMeans(init_i)
+        return ClusterExperiment(cls_alg=cls_alg,cls_quality=cluster.quality.DBI_quality)
+    cls_alg={ "uniform":alg_helper(cls_init.uniform_init),
+              "forgy":alg_helper(cls_init.forgy_init),
+              "partition":alg_helper(cls_init.partition_init),
+              "kmeans_plus":alg_helper(cls_init.kmeans_plus)}
+    def init_helper(cls_alg_i):
+        print(str(type(cls_alg_i)))
+        alg_quality=[ cls_alg_i.iters_quality(n_iters,n_points,show=False)
+                        for j in range(n_epochs)]
+        alg_quality=np.array(alg_quality)
+        return np.mean(alg_quality,axis=0),np.std(alg_quality,axis=0)               
+    results={ name_i:init_helper(cls_alg_i)
+                for name_i,cls_alg_i in cls_alg.items()}
+    visualization.show_dict(results)
+
 def get_cluster_generator(sigma=0.3,n=3,step=5.0):
     x=[ (i+1)*step for i in xrange(n) ]
     mu=[ (x_i,x_j)  
@@ -44,8 +62,9 @@ def get_cluster_generator(sigma=0.3,n=3,step=5.0):
     dists=[gen.dists.NormalDist(sigma=sigma,mu=mu_i)
             for mu_i in  mu]
     clust_gen=gen.dists.CompositeDist(dists)
-    return  gen.GenerateDataset(clust_gen)
+    return gen.GenerateDataset(clust_gen)
 
-cls_alg=cluster.KMeans(cls_init.kmeans_plus)
-cls_exp=ClusterExperiment(cls_alg, cluster.quality.DBI_quality)
-print(cls_exp.points_quality())
+#cls_alg=cluster.KMeans(cls_init.UniformInit())
+#cls_exp=ClusterExperiment(cls_alg, cluster.quality.DBI_quality)
+#print(cls_exp.iters_quality())
+init_experiment(n_iters=50,n_epochs=5,n_points=500)

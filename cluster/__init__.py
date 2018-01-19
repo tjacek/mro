@@ -1,29 +1,23 @@
 import numpy as np 
 import gen
+import itertools
 
 class Clustering(object):
     def __init__(self,clusters,centroids):
         self.clusters=clusters
         self.centroids=centroids
-        print(self.centroids)
-    
+
     def __len__(self):
         return len(self.clusters)
 
     def scatter(self,i):
-        if(self.is_empty(i)):
-            return 0.0
         return np.mean([L2(point_j-self.centroids[i])
                         for point_j in self.clusters[i]])
     
     def separation(self,i,j):
-        if(self.is_empty(i) or self.is_empty(j)):
-            return np.inf
         return L2(self.centroids[i] - self.centroids[j])
     
     def avg_distance(self,point_i,cls_i):
-        if(self.is_empty(cls_i)):
-            return np.inf
         return np.mean([ L2(point_j-point_i) 
                           for point_j in self.clusters[cls_i]])
 
@@ -57,11 +51,16 @@ class KMeans(object):
             for point_i in cls_j:
                 new_cls=assign_cluster(point_i,self.clustering.centroids)
                 new_clusters[new_cls].append(point_i)
-        new_centroids=[ np.mean(cls_i,axis=0)
-                        for cls_i in new_clusters]
+        new_centroids=[ self.cluster_mean(cluster_i)
+                        for cluster_i in new_clusters]
         self.clustering=Clustering(new_clusters,new_centroids)
         return self.clustering
 
+    def cluster_mean(self,cluster_i):
+        if(len(cluster_i)==0):
+            return random_centroid(self.clustering.clusters,clusters=True)
+        return  np.mean(cluster_i,axis=0)
+    
 def assign_cluster(point_i,centroids):
     dist=[L2(point_i-centroid_j)
             for centroid_j in centroids]
@@ -72,3 +71,11 @@ def empty_clusters(n_clust):
 
 def L2(point_i):
     return np.linalg.norm(point_i, ord=2)
+
+def random_centroid(points,clusters=False):
+    if(clusters):
+        points=list(itertools.chain.from_iterable(points))
+    points=np.array(points)
+    min_p=np.min(points,axis=0)
+    max_p=np.max(points,axis=0)
+    return np.random.uniform(min_p,max_p)
