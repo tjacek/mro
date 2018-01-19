@@ -55,6 +55,9 @@ class KMeans(object):
                         for cluster_i in new_clusters]
         self.clustering=Clustering(new_clusters,new_centroids)
         return self.clustering
+    
+    def not_initialized(self):
+        return self.clustering is None
 
     def cluster_mean(self,cluster_i):
         if(len(cluster_i)==0):
