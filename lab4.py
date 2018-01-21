@@ -58,8 +58,9 @@ def points_experiment(n_iters=50,n_epochs=3,n_points=100):
     cls_exp=ClusterExperiment(cls_alg=cluster.KMeans(cls_init.uniform_init),
                               cls_quality=cluster.quality.DBI_quality)
     points_stats=cls_exp.points_quality(n_iters,n_points, n_epochs)
-    for stats_i in points_stats:
-        visualization.show_bar(stats_i)
+    for i,stats_i in enumerate(points_stats):
+        title_i="Silhouette itertion:"+str(i*n_iters)
+        visualization.show_bar(stats_i,plot_title=title_i)
 
 def get_cluster_generator(sigma=0.3,n=3,step=5.0):
     x=[ (i+1)*step for i in xrange(n) ]

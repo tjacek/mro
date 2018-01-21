@@ -15,6 +15,13 @@ def show_dict(result_dict,labels=('x','y')):
     ax.legend(loc='upper center')
     plt.show()
 
+def show_bar(y,plot_title=None,width = 1.0):  
+    x = range(len(y))    
+    plt.bar(x, y, width, color="blue")
+    if(plot_title is not None):
+        plt.title(plot_title)
+    plt.show()
+
 def show_scatter(x,y,errors,labels=('x','y'),plot_title=None):
     plt.errorbar(x, y, yerr=errors, fmt='o')
     plt.xlabel(labels[0])
