@@ -10,7 +10,6 @@ class ClusterExperiment(object):
         self.cls_gen=get_cluster_generator()
         self.cls_alg=cls_alg
         self.cls_quality=cls_quality
-        self.dataset=None 
 
     def iters_quality(self,n_iters=50,n_points=500,show=True):
         self.__start__(n_points)
@@ -21,24 +20,23 @@ class ClusterExperiment(object):
             visualization.show(cls_data,legend=False)
         return iter_quality
 
-    def points_quality(self,n_iters=150,n_points=500, epochs=3):
-        if(self.cls_alg.not_initialized()):
-            basic_data=self.__start__(n_points)
-        points=self.dataset.get_points()
+    def points_quality(self,n_iters=20,n_points=500, n_epochs=3):
+        dataset=self.__start__(n_points)
+        points=dataset.get_points()
         def epoch_helper(i):
-            points_quality=cluster.quality.SilhouetteQuality(self.cls_alg.clustering)
             for j in range(n_iters):
                 self.cls_alg()
+            points_quality=cluster.quality.SilhouetteQuality(self.cls_alg.clustering)
             return [ points_quality(point_i) for point_i in points]
         return [ epoch_helper(i) 
-                    for i in range(epochs)]
+                    for i in range(n_epochs)]
 
     def __start__(self,n_points):
-        self.dataset=self.cls_gen(n_points)
-        self.cls_alg.start(self.dataset)
-        return self.dataset
+        dataset=self.cls_gen(n_points)
+        self.cls_alg.start(dataset)
+        return dataset
 
-def init_experiment(n_iters=300,n_epochs=5,n_points=100):
+def init_experiment(n_iters=50,n_epochs=5,n_points=100):
     def alg_helper(init_i):
         cls_alg=cluster.KMeans(init_i)
         return ClusterExperiment(cls_alg=cls_alg,cls_quality=cluster.quality.DBI_quality)
@@ -47,7 +45,7 @@ def init_experiment(n_iters=300,n_epochs=5,n_points=100):
               "partition":alg_helper(cls_init.partition_init),
               "kmeans_plus":alg_helper(cls_init.kmeans_plus)}
     def init_helper(cls_alg_i):
-        print(str(type(cls_alg_i)))
+        print(cls_alg_i.cls_alg)
         alg_quality=[ cls_alg_i.iters_quality(n_iters,n_points,show=False)
                         for j in range(n_epochs)]
         alg_quality=np.array(alg_quality)
@@ -55,6 +53,13 @@ def init_experiment(n_iters=300,n_epochs=5,n_points=100):
     results={ name_i:init_helper(cls_alg_i)
                 for name_i,cls_alg_i in cls_alg.items()}
     visualization.show_dict(results,labels=('number_of_iterations','DB_index'))
+
+def points_experiment(n_iters=50,n_epochs=3,n_points=100):
+    cls_exp=ClusterExperiment(cls_alg=cluster.KMeans(cls_init.uniform_init),
+                              cls_quality=cluster.quality.DBI_quality)
+    points_stats=cls_exp.points_quality(n_iters,n_points, n_epochs)
+    for stats_i in points_stats:
+        visualization.show_bar(stats_i)
 
 def get_cluster_generator(sigma=0.3,n=3,step=5.0):
     x=[ (i+1)*step for i in xrange(n) ]
@@ -66,7 +71,5 @@ def get_cluster_generator(sigma=0.3,n=3,step=5.0):
     clust_gen=gen.dists.CompositeDist(dists)
     return gen.GenerateDataset(clust_gen)
 
-cls_alg=cluster.KMeans(cls_init.uniform_init)
-cls_exp=ClusterExperiment(cls_alg, cluster.quality.DBI_quality)
-print(cls_exp.points_quality())
+points_experiment(n_iters=1,n_epochs=5,n_points=100)
 #init_experiment(n_iters=50,n_epochs=5,n_points=500)

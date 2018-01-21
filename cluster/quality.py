@@ -1,4 +1,5 @@
 import numpy as np
+import cluster
 
 def DBI_quality(clust):
     n_clust=len(clust)
@@ -14,9 +15,11 @@ class SilhouetteQuality(object):
     def __init__(self,clustering):
         self.clustering=clustering
 
-    def __call__(self,point_i,clust_i):
+    def __call__(self,point_i,clust_i=None):
+        if(clust_i is None):
+            clust_i=cluster.assign_cluster(point_i,self.clustering.centroids)
         a_i=self.clustering.avg_distance(point_i,clust_i)
         b_i=min([self.clustering.avg_distance(point_i,clust_j) 
         	        for clust_j in range(len(self.clustering)) 
         	            if clust_j!=clust_i])
-        return (a_i -b_i) /max([a_i,b_i])
+        return (b_i -a_i) /max([a_i,b_i])

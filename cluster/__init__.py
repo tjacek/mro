@@ -63,6 +63,9 @@ class KMeans(object):
         if(len(cluster_i)==0):
             return random_centroid(self.clustering.clusters,clusters=True)
         return  np.mean(cluster_i,axis=0)
+
+    def __str__(self):
+        return str(self.init.__name__)    
     
 def assign_cluster(point_i,centroids):
     dist=[L2(point_i-centroid_j)
