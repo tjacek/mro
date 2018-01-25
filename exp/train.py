@@ -1,5 +1,7 @@
 import exp
 import visualization
+from sklearn.metrics import confusion_matrix
+from sklearn.metrics import classification_report
 
 class SimpleExperiment(exp.TrainExperiment):
     def __init__(self,gen,model):
