@@ -1,6 +1,6 @@
 import gen,gen.dists
 import gen.conic,gen.preds
-import exp
+import exp.train
 import knn
 
 def make_gen1():
@@ -27,17 +27,9 @@ def get_non_convex():
     return gen.preds.SimpleNonConvex([1.0,1.0],[-1.0,1.0],[0.0,0.0],[0.0,-1.0])
 
 my_gen=make_gen3()
-dataset=my_gen(1500)
-dataset.show()
+#dataset=my_gen(1500)
+#dataset.show()
 #exp1=exp.SelectExperiment(my_gen,knn.KNN(k=1),knn.Condensate(k=1))
 #exp1(500,True)
-
-#metr=['mahalo','lmnn']
-#dataset=my_gen(1000)
-#dataset.show()
-#s_dataset=knn.remove_outliners(dataset)
-#s_dataset.show()
-#s_dataset=knn.remove_redundant(dataset)
-#s_dataset.show()
-#exp1=exp.Experiment(my_gen,knn.KNN(k=1,metric='lmnn'))#'mahalo'))
-#exp1(250,True)
+exp1=exp.train.SimpleExperiment(my_gen,knn.KNN(k=3))#,knn.Condensate(k=1))
+exp1(500,True)

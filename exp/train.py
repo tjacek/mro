@@ -1,5 +1,5 @@
 import exp
-import visualization
+import visualization,visualization.boundary
 from sklearn.metrics import confusion_matrix
 from sklearn.metrics import classification_report
 
@@ -15,7 +15,7 @@ class SimpleExperiment(exp.TrainExperiment):
         y_true=test.y
         print(classification_report(y_true, y_pred,digits=4))
         if(show):
-            visualization.decision_boundary(dataset,self.model)
+            visualization.boundary.decision_boundary(dataset,self.model)
 
 class SelectExperiment(exp.TrainExperiment):
     def __init__(self,gen,model,select_fun):
