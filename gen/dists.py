@@ -35,9 +35,8 @@ class UniformDist(object):
         self.end=[ start_i+width_i 
                     for start_i,width_i in zip(start,width)]
 
-    def __call__(self,n):
+    def __call__(self):
         def unif_helper(i):
             return np.random.uniform(low=self.start[i], high=self.end[i])        
-        return [ np.array([unif_helper(i) for i in range(self.dim)])
-                   for i in range(n) ]
+        return np.array([unif_helper(i) for i in range(self.dim)])
 
